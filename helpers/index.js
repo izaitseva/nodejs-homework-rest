@@ -1,5 +1,3 @@
 const RequestError = require('./requestError')
 
-module.exports = {
-    RequestError,
-}
+module.exports = RequestError

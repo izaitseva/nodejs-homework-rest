@@ -10,7 +10,7 @@ router.get('', async (req, res, next) => {
     res.json(allContacts)
     next()
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    next(error)
   }
 })
 
@@ -23,10 +23,8 @@ router.get('/:contactId', async (req, res, next) => {
       throw requestError(404, 'Not Found')
     }
     res.json(contact)
-    next()
   } catch (error) {
-    const { status = 500, message = "Server error" } = error
-    res.status(status).json({ message })
+    next(error)
   }
 })
 
