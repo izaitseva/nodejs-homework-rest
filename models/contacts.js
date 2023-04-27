@@ -1,4 +1,5 @@
 const fs = require('fs/promises')
+const {nanoid} = require('nanoid');
 const path = require('path');
 const contactsPath = path.join(__dirname, 'contacts.json')
 
@@ -23,9 +24,14 @@ const removeContact = async (contactId) => {
   return result
 }
 
-const addContact = async ({ id, name, phone, email }) => {
+const addContact = async ({name, email, phone}) => {
   const contacts = await listContacts();
-  const newContact = { id, name, phone, email }
+  const newContact = {
+    id: nanoid(),
+    name,
+    email,
+    phone
+  }
 
   contacts.push(newContact);
   await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2))
@@ -36,7 +42,7 @@ const updateContact = async (contactId, { name, phone, email }) => {
   const contacts = await listContacts();
   const index = contacts.findIndex((item) => item.id === contactId)
   if (index === -1) return null
-  contacts[index] = { contactId, name, phone, email }
+  contacts[index] = { id: contactId, name, phone, email }
   await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2))
   return contacts[index]
 }

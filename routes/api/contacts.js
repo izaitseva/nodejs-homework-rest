@@ -4,7 +4,7 @@ const contacts = require('../../models/contacts')
 const RequestError = require('../../helpers')
 
 const contactSchema = Joi.object({
-  id: Joi.string().required(),
+  // id: Joi.string().required(),
   name: Joi.string().required(),
   email: Joi.string().required(),
   phone: Joi.string().required(),
@@ -39,6 +39,7 @@ router.get('/:contactId', async (req, res, next) => {
 
 router.post('', async (req, res, next) => {
   try {
+    console.log(req.body);
     const { error } = contactSchema.validate(req.body)
     if (error) {
       throw RequestError(400, error.message)
@@ -70,8 +71,8 @@ router.put('/:contactId', async (req, res, next) => {
     if (error) {
       throw RequestError(400, error.message)
     }
-    const { id } = req.params
-    const result = await contacts.updateContact(id, req.body)
+    const { contactId } = req.params;
+    const result = await contacts.updateContact(contactId, req.body)
     if (!result) {
       throw RequestError(404, 'Not Found')
     }
