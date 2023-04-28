@@ -3,12 +3,20 @@ const Joi = require('joi')
 const contacts = require('../../models/contacts')
 const RequestError = require('../../helpers')
 
-const contactSchema = Joi.object({
-  // id: Joi.string().required(),
+const contactCreateSchema = Joi.object({
+  id: Joi.string().required(),
   name: Joi.string().required(),
   email: Joi.string().required(),
   phone: Joi.string().required(),
-})
+});
+
+const contactUpdateSchema = Joi.object({
+  id: Joi.string().optional(),
+  name: Joi.string().optional(),
+  email: Joi.string().optional(),
+  phone: Joi.string().optional(),
+});
+
 
 const router = express.Router()
 
@@ -40,7 +48,7 @@ router.get('/:contactId', async (req, res, next) => {
 router.post('', async (req, res, next) => {
   try {
     console.log(req.body);
-    const { error } = contactSchema.validate(req.body)
+    const { error } = contactCreateSchema.validate(req.body)
     if (error) {
       throw RequestError(400, error.message)
     }
@@ -67,7 +75,7 @@ router.delete('/:contactId', async (req, res, next) => {
 router.put('/:contactId', async (req, res, next) => {
 
   try {
-    const { error } = contactSchema.validate(req.body)
+    const { error } = contactUpdateSchema.validate(req.body)
     if (error) {
       throw RequestError(400, error.message)
     }
@@ -78,7 +86,7 @@ router.put('/:contactId', async (req, res, next) => {
     }
     res.json(result)
   } catch (error) {
-    next(error)
+    next(error)     
   }
 })
 
