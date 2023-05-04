@@ -2,16 +2,8 @@ const express = require('express')
 const logger = require('morgan')
 const cors = require('cors')
 const contactsRouter = require('./routes/api/contacts')
-const mongoose = require('mongoose');
 
 const app = express()
-
-const DB_HOST = 'mongodb+srv://ira:1701@cluster0.v8ivwg2.mongodb.net/db-contacts?retryWrites=true&w=majority'
-
-mongoose.connect(DB_HOST) 
-.then(() => console.log("database connection success"))
-.catch(error => console.log(error.message))
-
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
 
@@ -24,7 +16,7 @@ app.use('/api/contacts', contactsRouter)
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' })
 })
-
+ 
 app.use((err, req, res, next) => {
   const { status = 500, message = "Server error" } = err
   res.status(status).json({ message })
