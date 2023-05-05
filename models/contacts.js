@@ -52,10 +52,15 @@ const updateContact = async (contactId, { name, phone, email }) => {
   return contacts[index]
 }
 
+const updateStatusContact = async(contactId) => {
+  return contactId
+}
+
 module.exports = {
   listContacts,
   getContactById,
   removeContact,
   addContact,
   updateContact,
+  updateStatusContact
 }
