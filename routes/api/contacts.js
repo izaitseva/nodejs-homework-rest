@@ -2,16 +2,17 @@ const express = require('express')
 const Joi = require('joi')
 const contacts = require('../../models/contacts')
 const RequestError = require('../../helpers')
+const Contact = require('../../models/contact')
 
 const contactCreateSchema = Joi.object({
-  id: Joi.string().required(),
+  // id: Joi.string().required(),
   name: Joi.string().required(),
   email: Joi.string().required(),
   phone: Joi.string().required(),
 });
 
 const contactUpdateSchema = Joi.object({
-  id: Joi.string().optional(),
+  // id: Joi.string().optional(),
   name: Joi.string().optional(),
   email: Joi.string().optional(),
   phone: Joi.string().optional(),
@@ -52,7 +53,7 @@ router.post('', async (req, res, next) => {
     if (error) {
       throw RequestError(400, error.message)
     }
-    const result = await contacts.addContact(req.body)
+    const result = await Contact.create(req.body)
     return res.status(201).json(result)
   } catch (error) {
     next(error)
