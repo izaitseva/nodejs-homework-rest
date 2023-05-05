@@ -95,7 +95,7 @@ router.patch('/:contactId/favorite', async (req, res, next) => {
   try {
     const { error } = contactUpdateSchema.validate(req.body)
     if (error) {
-      throw RequestError(400, error.message)
+      throw RequestError(400,"missing field favorite")
     }
     const { contactId } = req.params;
     const result = await Contact.findByIdAndUpdate(contactId, req.body, { new: true })
