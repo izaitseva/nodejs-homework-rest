@@ -18,8 +18,20 @@ app.use('/api', authRouter)
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' })
 })
- 
+
 app.use((err, req, res, next) => {
+
+  if (err.message.includes('E11000 duplicate key error')) {
+    res.status(409).json({ message: "Email in use" })
+  }
+
+  if (err.message.includes('Cast to ObjectId failed')) {
+    res.status(400).json({ message: "Помилка від Joi або іншої бібліотеки валідації" })
+  }
+
+  if (err.name === "ValidationError") {
+    res.status(400).json({ message: "Помилка від Joi або іншої бібліотеки валідації" })
+  }
   const { status = 500, message = "Server error" } = err
   res.status(status).json({ message })
 })
