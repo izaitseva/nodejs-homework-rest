@@ -1,5 +1,10 @@
 const { Schema, model } = require('mongoose')
 
+// owner: {
+//     type: Schema.Types.ObjectId,
+//     ref: 'user',
+//   }
+
 const schema = new Schema(
     {
         name: {
