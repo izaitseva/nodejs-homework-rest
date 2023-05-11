@@ -1,10 +1,11 @@
 const express = require('express')
 const router = express.Router()
-const controller = require('../../controllers/controller')
-const authentification = require('../../controllers/users')
+const controller = require('../../controllers/users')
+const controllerWrapper = require('../../helpers/controllerWrapper')
+// const auth = require('../../middlewares/auth')
 
-router.post('/', controller.controllerWrapper(authentification.addContact))
-router.get('/contacts', controller.controllerWrapper(authentification.getContacts))
-router.get('/info', controller.controllerWrapper(authentification.getInfo))
+router.post('', controllerWrapper(controller.addContact))
+router.get('/contacts', controllerWrapper(controller.getContacts))
+router.get('/info', controllerWrapper(controller.getInfo))
 
 module.exports = router 

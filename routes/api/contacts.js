@@ -1,6 +1,6 @@
 const express = require('express')
 const Joi = require('joi')
-const RequestError = require('../../helpers')
+const {RequestError} = require('../../helpers')
 const Contact = require('../../models/contact')
 
 const contactCreateSchema = Joi.object({

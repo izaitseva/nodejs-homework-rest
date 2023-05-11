@@ -1,6 +1,14 @@
-const auth = (req, res, next) => {
-    console.log('auth middle');
-    next()
-}
+// const auth = (req, res, next) => {
+   
+//     const authHeader = req.headers.authorization
 
-module.exports = auth
+//     const [type, token] = authHeader.split(' ') || ''
+
+//     if(type !== "Bearer") {
+//         // throw
+//     }
+
+//     next()
+// }
+
+// module.exports = auth
