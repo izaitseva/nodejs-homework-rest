@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt')
 const User = require('../../models/user')
-// const {RequestError} = require('../../helpers')
 
 const registration = async (req, res) => {
     const { email, password } = req.body
