@@ -16,10 +16,14 @@ const schema = new Schema(
             enum: ["starter", "pro", "business"],
             default: "starter"
         },
+        contacts: {
+            type: [Schema.Types.ObjectId],
+            ref: 'contacts'
+        },
         token: String
     }
 )
 
 const User = model('user', schema);
 
-module.exports = User;
+module.exports = User; 

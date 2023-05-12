@@ -1,5 +1,7 @@
 const getContacts = (req, res) => {
-    res.json({ ok: true })
+    const { user } = req
+    const { contacts } = user
+    res.json({ contacts })
 }
 
 module.exports = getContacts

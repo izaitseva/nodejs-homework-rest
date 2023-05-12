@@ -1,9 +1,5 @@
 const { Schema, model } = require('mongoose')
 
-// owner: {
-//     type: Schema.Types.ObjectId,
-//     ref: 'user',
-//   }
 
 const schema = new Schema(
     {
@@ -21,6 +17,10 @@ const schema = new Schema(
             type: Boolean,
             default: false,
         },
+        // owner: {
+        //     type: Schema.Types.ObjectId,
+        //     ref: 'users',
+        // }
     }
     , { versionKey: false })
 
