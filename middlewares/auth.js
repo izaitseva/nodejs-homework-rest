@@ -4,7 +4,6 @@ const User = require('../models/user')
 
 const auth = async (req, res, next) => {
 
-    console.log("----- > AUTH MIDDLEWARE")
     const authHeader = req.headers.authorization || ''
 
     const [type, token] = authHeader.split(' ')
@@ -18,8 +17,7 @@ const auth = async (req, res, next) => {
     }
 
     try {
-        console.log("Token: ", token);
-        console.log("JWT_SECRET", process.env.JWT_SECRET);
+
         const { id } = jwt.verify(token, process.env.JWT_SECRET)
 
         const user = await User.findById(id)
@@ -29,7 +27,7 @@ const auth = async (req, res, next) => {
             throw RequestError(401, 'JWT Token is not valid')
         }
     }
-    console.log("----- > END AUTH MIDDLEWARE")
+
     next()
 }
 
