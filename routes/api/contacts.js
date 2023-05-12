@@ -1,6 +1,6 @@
 const express = require('express')
 const Joi = require('joi')
-const {RequestError} = require('../../helpers')
+const { RequestError } = require('../../helpers')
 const Contact = require('../../models/contact')
 
 const contactCreateSchema = Joi.object({
@@ -24,7 +24,11 @@ const router = express.Router()
 router.get('', async (req, res, next) => {
 
   try {
-    const allContacts = await Contact.find({}, '-__v');
+
+    const { page, limit } = req.query
+    const skip = (page - 1) * limit
+
+    const allContacts = await Contact.find({}, '-__v').skip(skip).limit(limit);
     res.json(allContacts)
     next()
   } catch (error) {
@@ -94,7 +98,7 @@ router.patch('/:contactId/favorite', async (req, res, next) => {
   try {
     const { error } = contactUpdateSchema.validate(req.body)
     if (error) {
-      throw RequestError(400,"missing field favorite")
+      throw RequestError(400, "missing field favorite")
     }
     const { contactId } = req.params;
     const result = await Contact.findByIdAndUpdate(contactId, req.body, { new: true })
