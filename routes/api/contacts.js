@@ -2,13 +2,14 @@ const express = require('express')
 const Joi = require('joi')
 const { RequestError } = require('../../helpers')
 const Contact = require('../../models/contact')
+const controllerWrapper = require('../../helpers/controllerWrapper')
+const auth = require('../../middlewares/auth')
 
 const contactCreateSchema = Joi.object({
-  id: Joi.string().required(),
   name: Joi.string().required(),
-  email: Joi.string().required(),
+  email: Joi.string(),
   phone: Joi.string().required(),
-  favorite: Joi.boolean().required()
+  favorite: Joi.boolean()
 });
 
 const contactUpdateSchema = Joi.object({
@@ -21,14 +22,15 @@ const contactUpdateSchema = Joi.object({
 
 const router = express.Router()
 
-router.get('', async (req, res, next) => {
+router.get('', controllerWrapper(auth), async (req, res, next) => {
 
   try {
+    const { _id: owner } = req.user;
 
     const { page, limit } = req.query
     const skip = (page - 1) * limit
 
-    const allContacts = await Contact.find({}, '-__v').skip(skip).limit(limit);
+    const allContacts = await Contact.find({owner}, '-__v').skip(skip).limit(limit);
     res.json(allContacts)
     next()
   } catch (error) {
@@ -49,14 +51,14 @@ router.get('/:contactId', async (req, res, next) => {
   }
 })
 
-router.post('', async (req, res, next) => {
+router.post('', controllerWrapper(auth), async (req, res, next) => {
   try {
-    console.log(req.body);
     const { error } = contactCreateSchema.validate(req.body)
     if (error) {
       throw RequestError(400, error.message)
     }
-    const result = await Contact.create(req.body)
+    const { id: owner } = req.user
+    const result = await Contact.create({ ...req.body, owner })
     return res.status(201).json(result)
   } catch (error) {
     next(error)

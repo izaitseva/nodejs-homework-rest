@@ -4,8 +4,6 @@ const controller = require('../../controllers/users')
 const controllerWrapper = require('../../helpers/controllerWrapper')
 const auth = require('../../middlewares/auth')
 
-router.post('', controllerWrapper(auth), controllerWrapper(controller.addContact))
-router.get('/contacts', controllerWrapper(controller.getContacts))
-router.get('/info', controllerWrapper(controller.getInfo))
+router.get('/info', controllerWrapper(auth), controllerWrapper(controller.getInfo))
 
 module.exports = router 
