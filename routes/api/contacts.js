@@ -42,7 +42,7 @@ router.get('/:contactId', controllerWrapper(auth), async (req, res, next) => {
   try {
     const { _id: owner } = req.user;
     const { contactId } = req.params
-    const contact = await Contact.find({ _id: contactId, owner })
+    const contact = await Contact.findOne({ _id: contactId, owner })
     if (!contact) {
       throw RequestError(404, 'Not Found')
     }
