@@ -30,7 +30,7 @@ router.get('', controllerWrapper(auth), async (req, res, next) => {
     const { page, limit } = req.query
     const skip = (page - 1) * limit
 
-    const allContacts = await Contact.find({owner}, '-__v').skip(skip).limit(limit);
+    const allContacts = await Contact.find({ owner }, '-__v').skip(skip).limit(limit);
     res.json(allContacts)
     next()
   } catch (error) {
@@ -38,10 +38,11 @@ router.get('', controllerWrapper(auth), async (req, res, next) => {
   }
 })
 
-router.get('/:contactId', async (req, res, next) => {
+router.get('/:contactId', controllerWrapper(auth), async (req, res, next) => {
   try {
+    const { _id: owner } = req.user;
     const { contactId } = req.params
-    const contact = await Contact.findById(contactId)
+    const contact = await Contact.find({ _id: contactId, owner })
     if (!contact) {
       throw RequestError(404, 'Not Found')
     }
@@ -65,10 +66,11 @@ router.post('', controllerWrapper(auth), async (req, res, next) => {
   }
 })
 
-router.delete('/:contactId', async (req, res, next) => {
+router.delete('/:contactId', controllerWrapper(auth), async (req, res, next) => {
   try {
+    const { _id: owner } = req.user;
     const { contactId } = req.params
-    const result = await Contact.findByIdAndDelete(contactId)
+    const result = await Contact.findOneAndDelete({ _id: contactId, owner })
     if (!result) {
       throw RequestError(404, 'Not Found')
     }
@@ -78,15 +80,16 @@ router.delete('/:contactId', async (req, res, next) => {
   }
 })
 
-router.put('/:contactId', async (req, res, next) => {
+router.put('/:contactId', controllerWrapper(auth), async (req, res, next) => {
 
   try {
+    const { _id: owner } = req.user;
     const { error } = contactUpdateSchema.validate(req.body)
     if (error) {
       throw RequestError(400, error.message)
     }
     const { contactId } = req.params;
-    const result = await Contact.findByIdAndUpdate(contactId, req.body, { new: true })
+    const result = await Contact.findOneAndUpdate({ _id: contactId, owner }, req.body, { new: true })
     if (!result) {
       throw RequestError(404, 'Not Found')
     }
@@ -96,14 +99,15 @@ router.put('/:contactId', async (req, res, next) => {
   }
 })
 
-router.patch('/:contactId/favorite', async (req, res, next) => {
+router.patch('/:contactId/favorite', controllerWrapper(auth), async (req, res, next) => {
   try {
     const { error } = contactUpdateSchema.validate(req.body)
     if (error) {
       throw RequestError(400, "missing field favorite")
     }
+    const { _id: owner } = req.user;
     const { contactId } = req.params;
-    const result = await Contact.findByIdAndUpdate(contactId, req.body, { new: true })
+    const result = await Contact.findOneAndUpdate({ _id: contactId, owner }, req.body, { new: true })
     if (!result) {
       throw RequestError(404, 'Not Found')
     }
