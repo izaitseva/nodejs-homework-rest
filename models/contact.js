@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose')
 
+
 const schema = new Schema(
     {
         name: {
@@ -16,6 +17,11 @@ const schema = new Schema(
             type: Boolean,
             default: false,
         },
+        owner: {
+            type: Schema.Types.ObjectId,
+            ref: 'users',
+            required: true
+        }
     }
     , { versionKey: false })
 
