@@ -27,7 +27,6 @@ const auth = async (req, res, next) => {
             throw RequestError(401, 'JWT Token is not valid')
         }
     }
-
     next()
 }
 

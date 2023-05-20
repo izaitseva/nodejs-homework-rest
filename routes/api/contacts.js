@@ -4,6 +4,9 @@ const { RequestError } = require('../../helpers')
 const Contact = require('../../models/contact')
 const controllerWrapper = require('../../helpers/controllerWrapper')
 const auth = require('../../middlewares/auth')
+const { upload } = require('../../middlewares')
+const path = require('path')
+const fs = require('fs/promises')
 
 const contactCreateSchema = Joi.object({
   name: Joi.string().required(),
@@ -115,6 +118,37 @@ router.patch('/:contactId/favorite', controllerWrapper(auth), async (req, res, n
   } catch (error) {
     next(error)
   }
+
+  const contactsDir = path.join(__dirname, "..", "..", "public", "avatars")
+  router.post('', upload.single('avatar'), async (req, res, next) => {
+    try {
+      console.log(contactsDir);
+
+      const { error } = contactCreateSchema.validate(req.body);
+      if (error) {
+        throw RequestError(400, error.message);
+      }
+
+      let avatar = null;
+      if (req.file) {
+        const { path: tmpUpload, originalname } = req.file;
+        const resultUpload = path.join(contactsDir, originalname);
+        await fs.rename(tmpUpload, resultUpload);
+        avatar = path.join("public", "avatars", originalname);
+      }
+
+      const newContact = {
+        ...req.body,
+        avatar
+      };
+
+      const result = await Contact.create(newContact);
+      return res.status(201).json(result);
+    } catch (error) {
+      next(error);
+    }
+  });
+
 })
 
 module.exports = router
