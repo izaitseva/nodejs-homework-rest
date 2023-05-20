@@ -6,7 +6,6 @@ const controllerWrapper = require('../../helpers/controllerWrapper')
 const auth = require('../../middlewares/auth')
 const { upload } = require('../../middlewares')
 const path = require('path')
-const fs = require('fs/promises')
 
 const contactCreateSchema = Joi.object({
   name: Joi.string().required(),
@@ -129,17 +128,8 @@ router.patch('/:contactId/favorite', controllerWrapper(auth), async (req, res, n
         throw RequestError(400, error.message);
       }
 
-      let avatar = null;
-      if (req.file) {
-        const { path: tmpUpload, originalname } = req.file;
-        const resultUpload = path.join(contactsDir, originalname);
-        await fs.rename(tmpUpload, resultUpload);
-        avatar = path.join("public", "avatars", originalname);
-      }
-
       const newContact = {
         ...req.body,
-        avatar
       };
 
       const result = await Contact.create(newContact);
@@ -148,7 +138,6 @@ router.patch('/:contactId/favorite', controllerWrapper(auth), async (req, res, n
       next(error);
     }
   });
-
 })
 
 module.exports = router
