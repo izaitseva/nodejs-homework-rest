@@ -23,8 +23,16 @@ const schema = new Schema(
         avatarURL: {
             type: String,
             required: true
-        }
-    }, {versionKey: false}
+        },
+        verify: {
+            type: Boolean,
+            default: false,
+        },
+        verificationToken: {
+            type: String,
+            required: [true, 'Verify token is required'],
+        },
+    }, { versionKey: false }
 )
 
 const User = model('user', schema);
