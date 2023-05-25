@@ -140,4 +140,4 @@ router.patch('/:contactId/favorite', controllerWrapper(auth), async (req, res, n
   });
 })
 
-module.exports = router
+module.exports = router;
